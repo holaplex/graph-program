@@ -1,5 +1,7 @@
 # Graph Program
 
+![Image](https://images.unsplash.com/photo-1594047752131-1ec0a6dfa4fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&h=250&w=1500)
+
 A program to connect accounts with public keys that allows for the creation of a very flexible graph structure on the blockchain.
 
 Table of contents:
