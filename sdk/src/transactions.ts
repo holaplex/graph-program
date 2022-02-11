@@ -1,38 +1,51 @@
 import { Wallet, web3 } from "@project-serum/anchor";
+import { WalletAndConnection } from "./actions";
 import { b } from "./lib/helpers/string";
-import { GraphProgram } from "./program";
+import { getGraphProgram } from "./program";
 
-export const getConnectionPDA = (wallet: Wallet, to: web3.PublicKey) =>
-  web3.PublicKey.findProgramAddress(
-    [b`connection`, wallet.publicKey.toBytes(), to.toBytes()],
-    GraphProgram.programId
+export const getConnectionPDA = (
+  walletPublicKey: web3.PublicKey,
+  to: web3.PublicKey,
+  programId: web3.PublicKey
+) => {
+  return web3.PublicKey.findProgramAddress(
+    [b`connection`, walletPublicKey.toBytes(), to.toBytes()],
+    programId
   );
+};
 
 export const createMakeConnectionTransaction = async (
-  wallet: Wallet,
-  to: web3.PublicKey
+  to: web3.PublicKey,
+  walletAndConnection: WalletAndConnection
 ) => {
-  const [connection] = await web3.PublicKey.findProgramAddress(
-    [b`connection`, wallet.publicKey.toBytes(), to.toBytes()],
-    GraphProgram.programId
+  const program = getGraphProgram(walletAndConnection);
+  const [connection] = await getConnectionPDA(
+    walletAndConnection.wallet.publicKey,
+    to,
+    program.programId
   );
-  return GraphProgram.transaction.makeConnection(to, {
+  return program.transaction.makeConnection(to, {
     accounts: {
       connection,
-      from: wallet.publicKey,
+      from: walletAndConnection.wallet.publicKey,
       systemProgram: web3.SystemProgram.programId,
     },
   });
 };
 
 export const createRevokeConnectionTransaction = async (
-  wallet: Wallet,
-  to: web3.PublicKey
+  to: web3.PublicKey,
+  walletAndConnection: WalletAndConnection
 ) => {
-  const [connection, bump] = await getConnectionPDA(wallet, to);
-  return GraphProgram.transaction.revokeConnection(bump, to, {
+  const program = getGraphProgram(walletAndConnection);
+  const [connection, bump] = await getConnectionPDA(
+    walletAndConnection.wallet.publicKey,
+    to,
+    program.programId
+  );
+  return program.transaction.revokeConnection(bump, to, {
     accounts: {
-      from: wallet.publicKey,
+      from: walletAndConnection.wallet.publicKey,
       connection,
     },
   });

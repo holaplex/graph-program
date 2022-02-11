@@ -11,18 +11,30 @@ export type WalletAndConnection = {
 
 export const makeConnection = async (
   to: web3.PublicKey,
-  { wallet, connection: web3Connection }: WalletAndConnection
+  walletAndConnection: WalletAndConnection
 ) => {
-  const tx = await createMakeConnectionTransaction(wallet, to);
-  const signedTX = await wallet.signTransaction(tx);
-  return web3Connection.sendTransaction(signedTX, []);
+  const tx = await createMakeConnectionTransaction(to, walletAndConnection);
+  const { blockhash } =
+    await walletAndConnection.connection.getRecentBlockhash();
+  tx.feePayer = walletAndConnection.wallet.publicKey;
+  tx.recentBlockhash = blockhash;
+  const signedTX = await walletAndConnection.wallet.signTransaction(tx);
+  return walletAndConnection.connection.sendRawTransaction(
+    signedTX.serialize()
+  );
 };
 
 export const revokeConnection = async (
   to: web3.PublicKey,
-  { wallet, connection: web3Connection }: WalletAndConnection
+  walletAndConnection: WalletAndConnection
 ) => {
-  const tx = await createRevokeConnectionTransaction(wallet, to);
-  const signedTX = await wallet.signTransaction(tx);
-  return web3Connection.sendTransaction(signedTX, []);
+  const tx = await createRevokeConnectionTransaction(to, walletAndConnection);
+  const { blockhash } =
+    await walletAndConnection.connection.getRecentBlockhash();
+  tx.feePayer = walletAndConnection.wallet.publicKey;
+  tx.recentBlockhash = blockhash;
+  const signedTX = await walletAndConnection.wallet.signTransaction(tx);
+  return walletAndConnection.connection.sendRawTransaction(
+    signedTX.serialize()
+  );
 };
