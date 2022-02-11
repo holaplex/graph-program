@@ -14,7 +14,11 @@ pub mod graph_program {
     pub fn make_connection(ctx: Context<MakeConnection>, to: Pubkey) -> ProgramResult {
         make_connection_instruction(ctx, to)
     }
-    pub fn revoke_connection(ctx: Context<RevokeConnection>) -> ProgramResult {
+    pub fn revoke_connection(
+        ctx: Context<RevokeConnection>,
+        _bump: u8,
+        _to: Pubkey,
+    ) -> ProgramResult {
         revoke_connection_instruction(ctx)
     }
 }
