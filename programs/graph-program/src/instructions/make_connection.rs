@@ -1,4 +1,4 @@
-use crate::{constants::*, state::*};
+use crate::{constants::CONNECTION_SEED, state::Connection};
 
 use anchor_lang::prelude::*;
 

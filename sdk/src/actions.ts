@@ -1,4 +1,5 @@
-import { Wallet, web3 } from "@project-serum/anchor";
+import { web3 } from "@project-serum/anchor";
+import { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import {
   createMakeConnectionTransaction,
   createRevokeConnectionTransaction,

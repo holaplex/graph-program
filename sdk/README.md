@@ -8,4 +8,3 @@ This Typescript SDK is a collection of utilities for interacting with the graph 
 - Transactions: prebuilt transactions to be used to interact with the program.
 - Actions: prebuilt sets of transaction executors that mutate the program.
 - Queries: helper queries to read program accounts.
-  

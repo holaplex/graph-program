@@ -1,4 +1,4 @@
-import { Wallet, web3 } from "@project-serum/anchor";
+import { web3 } from "@project-serum/anchor";
 import { WalletAndConnection } from "./actions";
 import { b } from "./lib/helpers/string";
 import { getGraphProgram } from "./program";
