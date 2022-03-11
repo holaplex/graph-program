@@ -1,0 +1,18 @@
+[workspace]
+members = ["programs/graph_program"]
+
+[programs.mainnet]
+graph_program = "grphSXQnjAoPXSG5p1aJ7ZFw2A1akqP3pkXvjfbSJef"
+
+[programs.devnet]
+graph_program = "grphSXQnjAoPXSG5p1aJ7ZFw2A1akqP3pkXvjfbSJef"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "mainnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
