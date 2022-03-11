@@ -5,5 +5,5 @@ target
 **/*.rs.bk
 node_modules
 
-./grphSXQnjAoPXSG5p1aJ7ZFw2A1akqP3pkXvjfbSJef.json
-./id.json
+grphSXQnjAoPXSG5p1aJ7ZFw2A1akqP3pkXvjfbSJef.json
+id.json
