@@ -15,7 +15,6 @@ pub struct Connection {
     pub status: Option<ConnectionStatus>, // No connection status equals connected
     pub connected_at: Option<i64>, // No connected_at time equals connected
     pub disconnected_at: Option<i64>, // No disconnected_at time equals connected
-    pub closed_at: Option<i64>, // No disconnected_at time equals connected
 }
 
 impl Connection {
@@ -24,8 +23,7 @@ impl Connection {
         32 +        // to
         1 + 1 +     // status
         1 + 8 +     // connected_at
-        1 + 8 +     // disconnected_at
-        1 + 8       // closed_at
+        1 + 8       // disconnected_at
     }
     pub fn log_make(&self) {
         msg!("Connected from {} to {}", self.from, self.to);
