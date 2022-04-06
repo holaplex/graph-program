@@ -17,4 +17,7 @@ pub mod graph_program {
     pub fn revoke_connection(ctx: Context<RevokeConnection>, _bump: u8, _to: Pubkey) -> Result<()> {
         revoke_connection_instruction(ctx)
     }
+    pub fn close_connection(ctx: Context<CloseConnection>, _bump: u8, _to: Pubkey) -> Result<()> {
+        close_connection_instruction(ctx)
+    }
 }

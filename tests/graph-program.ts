@@ -6,6 +6,16 @@ import { b } from "./helpers/string";
 
 const expect = require("chai").expect;
 
+const getPDA = (
+  from: anchor.web3.PublicKey,
+  to: anchor.web3.PublicKey,
+  program: anchor.Program<GraphProgram>
+) =>
+  anchor.web3.PublicKey.findProgramAddress(
+    [b`connection`, from.toBytes(), to.toBytes()],
+    program.programId
+  );
+
 describe("graph-program", () => {
   anchor.setProvider(anchor.Provider.env());
   const program = anchor.workspace.GraphProgram as Program<GraphProgram>;
@@ -14,41 +24,48 @@ describe("graph-program", () => {
   const from = fromWallet.publicKey;
   const to = anchor.web3.Keypair.generate().publicKey;
 
-  it("makes_and_removes_connections", async () => {
-    const [connection, bump] = await anchor.web3.PublicKey.findProgramAddress(
-      [b`connection`, from.toBytes(), to.toBytes()],
-      program.programId
-    );
+  it("makes_connections", async () => {
+    // No need to derive PDA here thanks to Seeds feature <3
+    const txId = await program.methods
+      .makeConnection(to)
+      .accounts({ from, clock: anchor.web3.SYSVAR_CLOCK_PUBKEY })
+      .rpc();
+    expect(!!txId).to.be.true;
+    const [pda] = await getPDA(from, to, program);
+    const connection = await program.account.connection.fetch(pda);
+    expect(!!connection.status["connected"]).to.be.true;
+  });
 
-    const makeTX = await program.rpc.makeConnection(to, {
-      accounts: {
+  it("revokes_connections", async () => {
+    const [pda, bump] = await getPDA(from, to, program);
+    const txId = await program.methods
+      .revokeConnection(bump, to)
+      .accounts({
+        connection: pda,
         from,
-        connection: connection,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
-      signers: [fromWallet.payer],
-    });
-    expect(!!makeTX).to.be.true;
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+      })
+      .rpc();
+    expect(!!txId).to.be.true;
+    const connection = await program.account.connection.fetch(pda);
+    expect(!!connection.status["disconnected"]).to.be.true;
+  });
 
-    const created = await program.account.connection.fetch(connection);
-    expect(created.to.toBase58()).equal(to.toBase58());
-    expect(created.from.toBase58()).equal(from.toBase58());
-
-    const revokeTX = await program.rpc.revokeConnection(bump, to, {
-      accounts: {
+  it("closes_connections", async () => {
+    const [pda, bump] = await getPDA(from, to, program);
+    const wallet = new anchor.Wallet(anchor.web3.Keypair.generate());
+    const txId = await program.methods
+      .closeConnection(bump, to)
+      .accounts({
+        connection: pda,
         from,
-        connection,
-      },
-      signers: [fromWallet.payer],
-    });
-
-    expect(!!revokeTX).to.be.true;
-    try {
-      await program.account.connection.fetch(connection);
-    } catch (error) {
-      expect(error.message).equal(
-        `Account does not exist ${connection.toBase58()}`
-      );
-    }
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        signer: wallet.publicKey, // Different signer
+      })
+      .signers([wallet.payer])
+      .rpc();
+    expect(!!txId).to.be.true;
+    const connection = await program.account.connection.fetchNullable(pda);
+    expect(connection).to.be.null;
   });
 });

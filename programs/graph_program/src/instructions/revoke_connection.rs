@@ -7,16 +7,20 @@ use anchor_lang::prelude::*;
 pub struct RevokeConnection<'info> {
     #[account(
         mut,
-        close = from,
-        seeds = [CONNECTION_SEED, from.key().as_ref(), to.as_ref()],
-        bump = bump
+        seeds = [CONNECTION_SEED.as_ref(), from.key().as_ref(), to.as_ref()],
+        bump = bump,
+        constraint = from.key().as_ref() == connection.from.key().as_ref(),
     )]
     pub connection: Account<'info, Connection>,
+    pub clock: Sysvar<'info, Clock>,
     #[account(mut)]
     pub from: Signer<'info>,
 }
 
 pub fn revoke_connection_instruction(ctx: Context<RevokeConnection>) -> Result<()> {
-    ctx.accounts.connection.log_revoke();
+    let connection = &mut ctx.accounts.connection;
+    connection.disconnected_at = Some(ctx.accounts.clock.unix_timestamp);
+    connection.status = Some(ConnectionStatus::Disconnected);
+    connection.log_revoke();
     Ok(())
 }

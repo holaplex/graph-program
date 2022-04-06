@@ -1,1 +1,1 @@
-pub const CONNECTION_SEED: &[u8] = b"connection";
+pub const CONNECTION_SEED: [u8; 10] = *b"connection";
