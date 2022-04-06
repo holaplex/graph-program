@@ -19,6 +19,7 @@ pub struct Connection {
 
 impl Connection {
     pub fn calculate_space() -> usize {
+        8 +         // account discriminator
         32 +        // from
         32 +        // to
         1 + 1 +     // status
