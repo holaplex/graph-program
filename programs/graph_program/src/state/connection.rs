@@ -12,7 +12,6 @@ pub struct Connection {
     pub from: Pubkey,
     pub to: Pubkey,
     // V2 Items.
-    pub status: Option<ConnectionStatus>, // No connection status equals connected
     pub connected_at: Option<i64>, // No connected_at time equals connected
     pub disconnected_at: Option<i64>, // No disconnected_at time equals connected
 }

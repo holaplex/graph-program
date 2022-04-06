@@ -20,7 +20,6 @@ pub struct RevokeConnection<'info> {
 pub fn revoke_connection_instruction(ctx: Context<RevokeConnection>) -> Result<()> {
     let connection = &mut ctx.accounts.connection;
     connection.disconnected_at = Some(ctx.accounts.clock.unix_timestamp);
-    connection.status = Some(ConnectionStatus::Disconnected);
     connection.log_revoke();
     Ok(())
 }

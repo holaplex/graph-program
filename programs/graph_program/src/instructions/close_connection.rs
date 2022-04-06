@@ -24,7 +24,7 @@ pub struct CloseConnection<'info> {
 pub fn close_connection_instruction(ctx: Context<CloseConnection>) -> Result<()> {
     let connection = &mut ctx.accounts.connection;
     require!(
-        connection.status == Some(ConnectionStatus::Disconnected),
+        connection.disconnected_at.is_some(),
         CloseConnectionError::AccountNeedsToBeDisconnected
     );
     connection.log_revoke();

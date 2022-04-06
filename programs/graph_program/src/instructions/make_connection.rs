@@ -27,7 +27,6 @@ pub fn make_connection_instruction(ctx: Context<MakeConnection>, to: Pubkey) -> 
     connection.from = ctx.accounts.from.key();
     connection.to = to;
     connection.connected_at = Some(ctx.accounts.clock.unix_timestamp);
-    connection.status = Some(ConnectionStatus::Connected);
     connection.log_make();
     Ok(())
 }
