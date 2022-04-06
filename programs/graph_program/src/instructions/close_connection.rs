@@ -12,7 +12,6 @@ pub struct CloseConnection<'info> {
         bump = bump
     )]
     pub connection: Account<'info, Connection>,
-    pub clock: Sysvar<'info, Clock>,
     #[account(
         mut,
         constraint = from.key().as_ref() == connection.from.key().as_ref()

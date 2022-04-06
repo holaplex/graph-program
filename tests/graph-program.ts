@@ -59,7 +59,6 @@ describe("graph-program", () => {
       .accounts({
         connection: pda,
         from,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
         signer: wallet.publicKey, // Different signer
       })
       .signers([wallet.payer])
