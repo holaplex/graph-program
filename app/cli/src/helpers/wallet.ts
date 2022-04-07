@@ -1,11 +1,12 @@
 import { web3, Wallet } from "@project-serum/anchor";
 import { readFile } from "fs/promises";
+import path from "path";
 
 export const getWalletFromKeyPairFile = async (keyPairFile: string) => {
   const payer = web3.Keypair.fromSecretKey(
     Buffer.from(
       JSON.parse(
-        await readFile(keyPairFile, {
+        await readFile(path.resolve(keyPairFile), {
           encoding: "utf-8",
         })
       )

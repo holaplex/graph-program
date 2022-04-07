@@ -32,6 +32,8 @@ USAGE
 * [`graph close-connection [FROM] [TO]`](#graph-close-connection-from-to)
 * [`graph help [COMMAND]`](#graph-help-command)
 * [`graph make-connection [TO]`](#graph-make-connection-to)
+* [`graph query-connections-from [FROM]`](#graph-query-connections-from-from)
+* [`graph query-connections-to [TO]`](#graph-query-connections-to-to)
 * [`graph revoke-connection [TO]`](#graph-revoke-connection-to)
 
 ## `graph close-connection [FROM] [TO]`
@@ -86,6 +88,56 @@ EXAMPLE
 ```
 
 _See code: [dist/commands/make-connection.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/make-connection.ts)_
+
+## `graph query-connections-from [FROM]`
+
+Gets all connections from the given input
+
+```
+USAGE
+  $ graph query-connections-from [FROM]
+
+OPTIONS
+  -e, --endpoint=endpoint  (required) RPC Endpoint
+  -x, --extended           show extra columns
+  --columns=columns        only show provided columns (comma-separated)
+  --csv                    output is csv format [alias: --output=csv]
+  --filter=filter          filter property by partial string matching, ex: name=foo
+  --no-header              hide table header from output
+  --no-truncate            do not truncate output to fit screen
+  --output=csv|json|yaml   output in a more machine friendly format
+  --sort=sort              property to sort by (prepend '-' for descending)
+
+EXAMPLE
+  graph query-connections-from
+```
+
+_See code: [dist/commands/query-connections-from.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-from.ts)_
+
+## `graph query-connections-to [TO]`
+
+Gets all connections to the given input
+
+```
+USAGE
+  $ graph query-connections-to [TO]
+
+OPTIONS
+  -e, --endpoint=endpoint  (required) RPC Endpoint
+  -x, --extended           show extra columns
+  --columns=columns        only show provided columns (comma-separated)
+  --csv                    output is csv format [alias: --output=csv]
+  --filter=filter          filter property by partial string matching, ex: name=foo
+  --no-header              hide table header from output
+  --no-truncate            do not truncate output to fit screen
+  --output=csv|json|yaml   output in a more machine friendly format
+  --sort=sort              property to sort by (prepend '-' for descending)
+
+EXAMPLE
+  graph query-connections-to
+```
+
+_See code: [dist/commands/query-connections-to.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-to.ts)_
 
 ## `graph revoke-connection [TO]`
 
