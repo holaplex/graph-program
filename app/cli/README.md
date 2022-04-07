@@ -32,8 +32,11 @@ USAGE
 * [`graph close-connection [FROM] [TO]`](#graph-close-connection-from-to)
 * [`graph help [COMMAND]`](#graph-help-command)
 * [`graph make-connection [TO]`](#graph-make-connection-to)
-* [`graph query-connections-from [FROM]`](#graph-query-connections-from-from)
-* [`graph query-connections-to [TO]`](#graph-query-connections-to-to)
+* [`graph migrate_v1_connection_to_v2 [TO]`](#graph-migrate_v1_connection_to_v2-to)
+* [`graph query-connections-from-v1 [FROM]`](#graph-query-connections-from-v1-from)
+* [`graph query-connections-from-v2 [FROM]`](#graph-query-connections-from-v2-from)
+* [`graph query-connections-to-v1 [TO]`](#graph-query-connections-to-v1-to)
+* [`graph query-connections-to-v2 [TO]`](#graph-query-connections-to-v2-to)
 * [`graph revoke-connection [TO]`](#graph-revoke-connection-to)
 
 ## `graph close-connection [FROM] [TO]`
@@ -89,13 +92,29 @@ EXAMPLE
 
 _See code: [dist/commands/make-connection.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/make-connection.ts)_
 
-## `graph query-connections-from [FROM]`
+## `graph migrate_v1_connection_to_v2 [TO]`
+
+Migrates a V1 Connection to It's V2 successor.
+
+```
+USAGE
+  $ graph migrate_v1_connection_to_v2 [TO]
+
+OPTIONS
+  -e, --endpoint=endpoint  (required) RPC Endpoint
+  -k, --keypair=keypair    (required) Solana Keypair
+
+EXAMPLE
+  graph migrate_v1_connection_to_v2
+```
+
+## `graph query-connections-from-v1 [FROM]`
 
 Gets all connections from the given input
 
 ```
 USAGE
-  $ graph query-connections-from [FROM]
+  $ graph query-connections-from-v1 [FROM]
 
 OPTIONS
   -e, --endpoint=endpoint  (required) RPC Endpoint
@@ -109,18 +128,43 @@ OPTIONS
   --sort=sort              property to sort by (prepend '-' for descending)
 
 EXAMPLE
-  graph query-connections-from
+  graph query-connections-from-v1
 ```
 
-_See code: [dist/commands/query-connections-from.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-from.ts)_
+_See code: [dist/commands/query-connections-from-v1.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-from-v1.ts)_
 
-## `graph query-connections-to [TO]`
+## `graph query-connections-from-v2 [FROM]`
+
+Gets all connections from the given input
+
+```
+USAGE
+  $ graph query-connections-from-v2 [FROM]
+
+OPTIONS
+  -e, --endpoint=endpoint  (required) RPC Endpoint
+  -x, --extended           show extra columns
+  --columns=columns        only show provided columns (comma-separated)
+  --csv                    output is csv format [alias: --output=csv]
+  --filter=filter          filter property by partial string matching, ex: name=foo
+  --no-header              hide table header from output
+  --no-truncate            do not truncate output to fit screen
+  --output=csv|json|yaml   output in a more machine friendly format
+  --sort=sort              property to sort by (prepend '-' for descending)
+
+EXAMPLE
+  graph query-connections-from-v2
+```
+
+_See code: [dist/commands/query-connections-from-v2.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-from-v2.ts)_
+
+## `graph query-connections-to-v1 [TO]`
 
 Gets all connections to the given input
 
 ```
 USAGE
-  $ graph query-connections-to [TO]
+  $ graph query-connections-to-v1 [TO]
 
 OPTIONS
   -e, --endpoint=endpoint  (required) RPC Endpoint
@@ -134,10 +178,35 @@ OPTIONS
   --sort=sort              property to sort by (prepend '-' for descending)
 
 EXAMPLE
-  graph query-connections-to
+  graph query-connections-to-v1
 ```
 
-_See code: [dist/commands/query-connections-to.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-to.ts)_
+_See code: [dist/commands/query-connections-to-v1.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-to-v1.ts)_
+
+## `graph query-connections-to-v2 [TO]`
+
+Gets all connections to the given input
+
+```
+USAGE
+  $ graph query-connections-to-v2 [TO]
+
+OPTIONS
+  -e, --endpoint=endpoint  (required) RPC Endpoint
+  -x, --extended           show extra columns
+  --columns=columns        only show provided columns (comma-separated)
+  --csv                    output is csv format [alias: --output=csv]
+  --filter=filter          filter property by partial string matching, ex: name=foo
+  --no-header              hide table header from output
+  --no-truncate            do not truncate output to fit screen
+  --output=csv|json|yaml   output in a more machine friendly format
+  --sort=sort              property to sort by (prepend '-' for descending)
+
+EXAMPLE
+  graph query-connections-to-v2
+```
+
+_See code: [dist/commands/query-connections-to-v2.ts](https://github.com/holaplex/graph-program/blob/v0.2.0/dist/commands/query-connections-to-v2.ts)_
 
 ## `graph revoke-connection [TO]`
 
