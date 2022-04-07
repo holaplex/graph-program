@@ -21,7 +21,6 @@ impl Connection {
         8 +         // account discriminator
         32 +        // from
         32 +        // to
-        1 + 1 +     // status
         1 + 8 +     // connected_at
         1 + 8       // disconnected_at
     }

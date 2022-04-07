@@ -1,35 +1,31 @@
 import { ACCOUNT_DISCRIMINATOR_SIZE, web3 } from "@project-serum/anchor";
-import { WalletAndConnection } from "./actions";
-import { getGraphProgram } from "./program";
+import * as anchor from "@project-serum/anchor";
+import { GraphProgram } from "../../target/types/graph_program";
 
-export const getAllConnectionsFrom = (
+export const getProgramAccountsFrom = (
   from: web3.PublicKey,
-  walletAndConnection: WalletAndConnection
-) => {
-  const offset = ACCOUNT_DISCRIMINATOR_SIZE;
-  return getGraphProgram(walletAndConnection).account.connection.all([
+  program: anchor.Program<GraphProgram>
+) =>
+  program.account.connection.all([
     {
       memcmp: {
-        offset,
+        offset: ACCOUNT_DISCRIMINATOR_SIZE,
         bytes: from.toBase58(),
       },
     },
   ]);
-};
 
-export const getAllConnectionsTo = (
+export const getProgramAccountsTo = (
   to: web3.PublicKey,
-  walletAndConnection: WalletAndConnection
-) => {
-  const offset = ACCOUNT_DISCRIMINATOR_SIZE + 32;
-  return getGraphProgram(walletAndConnection).account.connection.all([
+  program: anchor.Program<GraphProgram>
+) =>
+  program.account.connection.all([
     {
       memcmp: {
-        offset,
+        offset: ACCOUNT_DISCRIMINATOR_SIZE + 32,
         bytes: to.toBase58(),
       },
     },
   ]);
-};
 
 // TODO: Add Twitter-Verified accounts using the Solana Name Service Program.

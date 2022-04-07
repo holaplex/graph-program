@@ -27,6 +27,16 @@ pub fn close_connection_instruction(ctx: Context<CloseConnection>) -> Result<()>
         connection.disconnected_at.is_some(),
         CloseConnectionError::AccountNeedsToBeDisconnected
     );
+    // If connected_at is not set, let's assume beginning of time as it is logically in absolute past (0).
+    let connected_at = match connection.connected_at {
+        Some(connected_at) => connected_at,
+        None => 0i64,
+    };
+    let disconnected_at = connection.disconnected_at.unwrap(); // Safe to unwrap since we check the value is set.
+    require!(
+        disconnected_at > connected_at,
+        CloseConnectionError::DisconnectionDateMustBeHigherThanConnectionDate
+    );
     connection.log_revoke();
     Ok(())
 }
@@ -35,4 +45,6 @@ pub fn close_connection_instruction(ctx: Context<CloseConnection>) -> Result<()>
 pub enum CloseConnectionError {
     #[msg("Account needs to be disconnected first")]
     AccountNeedsToBeDisconnected,
+    #[msg("Disconnection date must be higher than connection date")]
+    DisconnectionDateMustBeHigherThanConnectionDate,
 }

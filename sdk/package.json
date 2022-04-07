@@ -1,6 +1,6 @@
 {
   "name": "@holaplex/graph-program",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A program to connect accounts with public keys that allows for the creation of a very flexible graph structure on the blockchain.",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@project-serum/anchor": "^0.22.1"
+    "@project-serum/anchor": "^0.23.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
