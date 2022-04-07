@@ -12,14 +12,15 @@ pub struct RevokeConnection<'info> {
         constraint = from.key().as_ref() == connection.from.key().as_ref(),
     )]
     pub connection: Account<'info, Connection>,
-    pub clock: Sysvar<'info, Clock>,
     #[account(mut)]
     pub from: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 pub fn revoke_connection_instruction(ctx: Context<RevokeConnection>) -> Result<()> {
+    let clock = Clock::get()?;
     let connection = &mut ctx.accounts.connection;
-    connection.disconnected_at = Some(ctx.accounts.clock.unix_timestamp);
+    connection.disconnected_at = Some(clock.unix_timestamp);
     connection.log_revoke();
     Ok(())
 }

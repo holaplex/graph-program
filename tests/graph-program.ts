@@ -28,27 +28,23 @@ describe("graph-program", () => {
     // No need to derive PDA here thanks to Seeds feature <3
     const txId = await program.methods
       .makeConnection(to)
-      .accounts({ from, clock: anchor.web3.SYSVAR_CLOCK_PUBKEY })
+      .accounts({ from })
       .rpc();
     expect(!!txId).to.be.true;
     const [pda] = await getPDA(from, to, program);
     const connection = await program.account.connection.fetch(pda);
-    expect(!!connection.status["connected"]).to.be.true;
+    expect(connection.disconnectedAt).to.be.null;
   });
 
   it("revokes_connections", async () => {
     const [pda, bump] = await getPDA(from, to, program);
     const txId = await program.methods
       .revokeConnection(bump, to)
-      .accounts({
-        connection: pda,
-        from,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-      })
+      .accounts({ from })
       .rpc();
     expect(!!txId).to.be.true;
     const connection = await program.account.connection.fetch(pda);
-    expect(!!connection.status["disconnected"]).to.be.true;
+    expect(!!connection.disconnectedAt).to.be.true;
   });
 
   it("closes_connections", async () => {

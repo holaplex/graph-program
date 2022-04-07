@@ -1,4 +1,4 @@
-use crate::{state::{Connection, ConnectionStatus}, constants::*};
+use crate::{state::{Connection}, constants::*};
 
 use anchor_lang::prelude::*;
 
@@ -16,17 +16,17 @@ pub struct MakeConnection<'info> {
         bump,
     )]
     pub connection: Account<'info, Connection>,
-    pub clock: Sysvar<'info, Clock>,
     #[account(mut)]
     pub from: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
 pub fn make_connection_instruction(ctx: Context<MakeConnection>, to: Pubkey) -> Result<()> {
+    let clock = Clock::get()?;
     let connection = &mut ctx.accounts.connection;
     connection.from = ctx.accounts.from.key();
     connection.to = to;
-    connection.connected_at = Some(ctx.accounts.clock.unix_timestamp);
+    connection.connected_at = Some(clock.unix_timestamp);
     connection.log_make();
     Ok(())
 }
