@@ -6,6 +6,9 @@ import { b } from "./helpers/string";
 
 const expect = require("chai").expect;
 
+const sleep = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));
+
 const getConnectionV2PDA = (
   from: anchor.web3.PublicKey,
   to: anchor.web3.PublicKey,
@@ -34,6 +37,7 @@ describe("graph-program", () => {
     const [pda] = await getConnectionV2PDA(signer, to, program);
     const connection = await program.account.connectionV2.fetch(pda);
     expect(connection.disconnectedAt).to.be.null;
+    await sleep(1000); // Wait a bit to avoid sending both a make and revoke in the same TX and fail validations.
   });
 
   it("revokes_connections", async () => {
