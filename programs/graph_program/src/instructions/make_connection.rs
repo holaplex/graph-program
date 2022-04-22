@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(to: Pubkey)]
-pub struct MakeConnectionV2<'info> {
+pub struct MakeConnection<'info> {
     #[account(
         init_if_needed,
         payer = from,
@@ -18,7 +18,7 @@ pub struct MakeConnectionV2<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn make_connection_instruction_v2(ctx: Context<MakeConnectionV2>, to: Pubkey) -> Result<()> {
+pub fn make_connection(ctx: Context<MakeConnection>, to: Pubkey) -> Result<()> {
     let clock = Clock::get()?;
     let connection = &mut ctx.accounts.connection;
     connection.from = ctx.accounts.from.key();

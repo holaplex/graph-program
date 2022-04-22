@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 #[instruction(bump: u8, to: Pubkey)]
-pub struct CloseConnectionV2<'info> {
+pub struct CloseConnection<'info> {
     #[account(
         mut,
         close = from,
@@ -21,7 +21,7 @@ pub struct CloseConnectionV2<'info> {
     pub signer: Signer<'info>, // Anyone can sign, permissionless call.
 }
 
-pub fn close_connection_instruction_v2(ctx: Context<CloseConnectionV2>) -> Result<()> {
+pub fn close_connection(ctx: Context<CloseConnection>) -> Result<()> {
     let connection = &mut ctx.accounts.connection;
     require!(
         connection.disconnected_at.is_some(),
