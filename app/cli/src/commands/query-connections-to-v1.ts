@@ -24,7 +24,7 @@ export default class QueryConnectionsToV1 extends Command {
     const program = new anchor.Program(
       Program.IDL,
       Program.PROGRAM_ID,
-      new anchor.Provider(
+      new anchor.AnchorProvider(
         new anchor.web3.Connection(flags.endpoint),
         new anchor.Wallet(anchor.web3.Keypair.generate()), // Random wallet, it's unused.
         {}

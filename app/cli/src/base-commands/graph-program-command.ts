@@ -22,7 +22,7 @@ export default abstract class GraphProgramCommand extends Command {
     const connection = new anchor.web3.Connection(flags.endpoint, "finalized");
     const wallet = await getWalletFromKeyPairFile(flags.keypair);
     const graphProgram = Program.getGraphProgram(
-      new anchor.Provider(connection, wallet, {})
+      new anchor.AnchorProvider(connection, wallet, {})
     );
     return graphProgram;
   };

@@ -17,7 +17,7 @@ graph_program = "grphSXQnjAoPXSG5p1aJ7ZFw2A1akqP3pkXvjfbSJef"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

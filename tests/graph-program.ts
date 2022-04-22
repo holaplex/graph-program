@@ -27,7 +27,7 @@ const getConnectionV2PDA = (
   );
 
 describe("graph-program", () => {
-  anchor.setProvider(anchor.Provider.env());
+  anchor.setProvider(anchor.AnchorProvider.env());
   const program = anchor.workspace.GraphProgram as Program<GraphProgram>;
 
   const fromWallet = anchor.Wallet.local();
