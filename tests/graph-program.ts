@@ -34,10 +34,11 @@ describe("graph-program", () => {
       .accounts({ from: signer })
       .rpc();
     expect(!!txId).to.be.true;
+    // Wait for finality so we avoid disconnecting on the same time slot.
+    await program.provider.connection.confirmTransaction(txId, 'finalized');
     const [pda] = await getConnectionV2PDA(signer, to, program);
     const connection = await program.account.connectionV2.fetch(pda);
     expect(connection.disconnectedAt).to.be.null;
-    await sleep(1000); // Wait a bit to avoid sending both a make and revoke in the same TX and fail validations.
   });
 
   it("revokes_connections", async () => {
