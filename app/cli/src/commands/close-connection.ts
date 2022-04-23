@@ -1,5 +1,5 @@
 import { CliUx } from "@oclif/core";
-import { getWalletFromKeyPairFile } from "../helpers/wallet";
+import { getWalletFromKeyPairFile } from "../lib/helpers/wallet";
 import GraphProgramCommand from "../base-commands/graph-program-command";
 import { Helpers } from "@holaplex/graph-program";
 import { web3 } from "@project-serum/anchor";

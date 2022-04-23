@@ -18,11 +18,14 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
+    "@holaplex/graph-program": "file:../../sdk/",
     "@oclif/core": "^1.6.4",
     "@oclif/plugin-help": "^5.1.12",
     "@oclif/plugin-plugins": "^2.1.0",
     "@project-serum/anchor": "^0.24.2",
-    "@holaplex/graph-program": "file:../../sdk/"
+    "lodash": "^4.17.21",
+    "lowdb": "^3.0.0",
+    "winston": "^3.7.2"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.10",

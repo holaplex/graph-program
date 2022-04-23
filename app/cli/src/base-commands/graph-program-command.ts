@@ -1,7 +1,7 @@
 import { Command, Flags } from "@oclif/core";
 import { Program } from "@holaplex/graph-program";
 import * as anchor from "@project-serum/anchor";
-import { getWalletFromKeyPairFile } from "../helpers/wallet";
+import { getWalletFromKeyPairFile } from "../lib/helpers/wallet";
 
 // Java verbosity memories.
 export default abstract class GraphProgramCommand extends Command {
