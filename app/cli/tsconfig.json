@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "./build/",
     "declaration": true,
-    "importHelpers": true,
-    "module": "commonjs",
-    "outDir": "dist",
-    "rootDir": "src",
+    "declarationDir": "./build/",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "target": "es2019",
-    "esModuleInterop": true
-  },
-  "include": [
-    "src/**/*"
-  ]
+    "skipLibCheck": true,
+  }
 }
