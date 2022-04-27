@@ -3,6 +3,7 @@ import { buildMakeConnectionCommand } from "./commands/makeConnection.js";
 import { buildRevokeConnectionCommand } from "./commands/revokeConnection.js";
 import { buildGetAllConnectionsFromCommand } from "./commands/getAllConnectionsFrom.js";
 import { buildGetAllConnectionsToCommand } from "./commands/getAllConnectionsTo.js";
+import { buildGetAllConnectionsCommand } from "./commands/getAllConnections.js";
 
 program.version("0.1.0");
 
@@ -31,6 +32,14 @@ program
   .requiredOption("-k, --solana-keypair <solanaKeypair>", "Solana Keypair")
   .option("-r, --rpc <rpc>", "RPC to use.", "https://api.devnet.solana.com")
   .action(buildGetAllConnectionsFromCommand());
+
+program
+  .command("get-all-connections")
+  .description("Lists all program connections.")
+  .requiredOption("-k, --solana-keypair <solanaKeypair>", "Solana Keypair")
+  .option("-r, --rpc <rpc>", "RPC to use.", "https://api.devnet.solana.com")
+  .option("-o, --outFile <outFile>", "Output file to write.", "./connections.json")
+  .action(buildGetAllConnectionsCommand());
 
 program
   .command("get-all-connections-from")
