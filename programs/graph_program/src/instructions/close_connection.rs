@@ -34,7 +34,7 @@ pub fn close_connection(ctx: Context<CloseConnection>) -> Result<()> {
         disconnected_at > connected_at,
         CloseConnectionError::DisconnectionDateMustBeHigherThanConnectionDate
     );
-    connection.log_revoke();
+    connection.log_close();
     Ok(())
 }
 
