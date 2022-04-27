@@ -62,6 +62,14 @@ program
   .action(buildGetAllConnectionsFromCommand());
 
 program
+  .command("get-all-connections")
+  .description("Lists all program connections.")
+  .requiredOption("-k, --solana-keypair <solanaKeypair>", "Solana Keypair")
+  .option("-r, --rpc <rpc>", "RPC to use.", "https://api.devnet.solana.com")
+  .option("-o, --outFile <outFile>", "Output file to write.", "./connections.json")
+  .action(buildGetAllConnectionsCommand());
+
+program
   .command("get-all-connections-from")
   .description("Lists connections from an account.")
   .requiredOption("-k, --solana-keypair <solanaKeypair>", "Solana Keypair")
