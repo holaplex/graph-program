@@ -1,4 +1,4 @@
-use crate::{constants::CONNECTION_SEED, state::Connection};
+use crate::{state::{ConnectionV2}, constants::*};
 
 use anchor_lang::prelude::*;
 
@@ -6,21 +6,25 @@ use anchor_lang::prelude::*;
 #[instruction(to: Pubkey)]
 pub struct MakeConnection<'info> {
     #[account(
-        init,
+        init_if_needed,
         payer = from,
-        seeds = [CONNECTION_SEED, from.key().as_ref(), to.as_ref()],
+        space = ConnectionV2::calculate_space(),
+        seeds = [CONNECTION_SEED_V2.as_ref(), from.key().as_ref(), to.as_ref()],
         bump,
     )]
-    pub connection: Account<'info, Connection>,
+    pub connection: Account<'info, ConnectionV2>,
     #[account(mut)]
     pub from: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn make_connection_instruction(ctx: Context<MakeConnection>, to: Pubkey) -> Result<()> {
+pub fn make_connection(ctx: Context<MakeConnection>, to: Pubkey) -> Result<()> {
+    let clock = Clock::get()?;
     let connection = &mut ctx.accounts.connection;
     connection.from = ctx.accounts.from.key();
     connection.to = to;
+    connection.connected_at = clock.unix_timestamp;
+    connection.disconnected_at = None;
     connection.log_make();
     Ok(())
 }

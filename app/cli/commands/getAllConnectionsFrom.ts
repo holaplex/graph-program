@@ -1,8 +1,9 @@
 import * as anchor from "@project-serum/anchor";
 import { getWallet } from "../tools/wallet.js";
-import { Queries } from "@holaplex/graph-program";
+import { Queries, Program } from "@holaplex/graph-program";
 
-const { getAllConnectionsFrom } = Queries;
+const { getProgramAccountsFrom } = Queries;
+const { getGraphProgram } = Program;
 
 type GetAllConnectionsFromInput = {
   rpc: string;
@@ -13,10 +14,13 @@ export const buildGetAllConnectionsFromCommand =
   () => async (input: GetAllConnectionsFromInput) => {
     const wallet = await getWallet(input.solanaKeypair);
     const connection = new anchor.web3.Connection(input.rpc);
-    const results = await getAllConnectionsFrom(wallet.publicKey, {
-      wallet,
-      connection,
-    });
+    const graphProgram = getGraphProgram(
+      new anchor.AnchorProvider(connection, wallet, {})
+    );
+    const results = await getProgramAccountsFrom(
+      wallet.publicKey,
+      graphProgram
+    );
     const map = results.map(({ account: { from, to }, publicKey }) => ({
       publicKey: publicKey.toBase58(),
       from: from.toBase58(),

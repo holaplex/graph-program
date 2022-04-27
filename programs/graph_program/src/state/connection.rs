@@ -1,17 +1,28 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*};
 
 #[account]
-#[derive(Default)]
-pub struct Connection {
+pub struct ConnectionV2 {
     pub from: Pubkey,
     pub to: Pubkey,
+    pub connected_at: i64,
+    pub disconnected_at: Option<i64>,
 }
 
-impl Connection {
+impl ConnectionV2 {
+    pub fn calculate_space() -> usize {
+        8 +         // account discriminator
+        32 +        // from
+        32 +        // to
+        8 +         // connected_at
+        1 + 8       // disconnected_at
+    }
     pub fn log_make(&self) {
-        msg!("Created connection from {} to {}", self.from, self.to);
+        msg!("Connected from {} to {}", self.from, self.to);
     }
     pub fn log_revoke(&self) {
-        msg!("Revoked connection from {} to {}", self.from, self.to);
+        msg!("Disconnected from {} to {}", self.from, self.to);
+    }
+    pub fn log_close(&self) {
+        msg!("Closed from {} to {}", self.from, self.to);
     }
 }
