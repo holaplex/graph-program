@@ -68,19 +68,4 @@ describe("graph-program", () => {
     const connection = await program.account.connectionV2.fetchNullable(pda);
     expect(connection).to.be.null;
   });
-
-  it("makes_admin_connections", async () => {
-    const from = anchor.web3.Keypair.generate().publicKey;
-    const to = anchor.web3.Keypair.generate().publicKey;
-    const [pda] = await getConnectionV2PDA(from, to, program);
-    const txId = await program.methods
-      .adminMakeConnection(from, to)
-      .accounts({
-        signer,
-      })
-      .rpc();
-    expect(!!txId).to.be.true;
-    const connection = await program.account.connectionV2.fetch(pda);
-    expect(connection.disconnectedAt ?? null).to.be.null;
-  });
 });
