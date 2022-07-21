@@ -1,4 +1,4 @@
-use crate::{constants::*, state::*};
+use crate::{constants::*, state::*, errors::*};
 
 use anchor_lang::prelude::*;
 
@@ -29,15 +29,10 @@ pub fn revoke_connection(ctx: Context<RevokeConnection>) -> Result<()> {
     let disconnected_at = connection.disconnected_at.unwrap(); // Safe to unwrap since we check the value is set.
     require!(
         disconnected_at > connected_at,
-        RevokeConnectionError::ClockDateMustBeHigherThanConnectionDate
+        GraphError::ClockDateMustBeHigherThanConnectionDate
     );
 
     connection.log_revoke();
     Ok(())
 }
 
-#[error_code]
-pub enum RevokeConnectionError {
-    #[msg("Clock date must be higher than connection date. Retry in another block.")]
-    ClockDateMustBeHigherThanConnectionDate,
-}
