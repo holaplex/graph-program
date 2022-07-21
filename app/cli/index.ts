@@ -5,21 +5,8 @@ import { buildGetAllConnectionsFromCommand } from "./commands/getAllConnectionsF
 import { buildGetAllConnectionsToCommand } from "./commands/getAllConnectionsTo.js";
 import { buildGetAllConnectionsCommand } from "./commands/getAllConnections.js";
 import { buildCloseConnectionCommand } from "./commands/closeConnection.js";
-import { buildMakeAdminConnectionsCommand } from "./commands/makeAdminConnections.js";
 
-program.version("0.2.2");
-
-program
-  .command("make-admin-connections")
-  .description("Creates the given connections using an Admin wallet.")
-  .requiredOption("-k, --solana-keypair <solanaKeypair>", "Solana Keypair")
-  .option("-r, --rpc <rpc>", "RPC to use.", "https://api.devnet.solana.com")
-  .requiredOption(
-    "-c, --connections-file <connectionsFile>",
-    "File with the connections (JSON).",
-    "./connections.json"
-  )
-  .action(buildMakeAdminConnectionsCommand());
+program.version("0.3.0");
 
 program
   .command("make-connection")
