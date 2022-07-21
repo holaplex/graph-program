@@ -22,7 +22,7 @@ pub fn revoke_connection(ctx: Context<RevokeConnection>) -> Result<()> {
     let connection = &mut ctx.accounts.connection;
     connection.disconnected_at = Some(clock.unix_timestamp);
 
-    // Validate right disconnection time, someone
+    // Validates right disconnection time, because someone
     // Can mess up account state by sending both a
     // make, and a revoke in the same block.
     let connected_at = connection.connected_at;
