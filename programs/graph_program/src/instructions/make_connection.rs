@@ -1,4 +1,4 @@
-use crate::{state::{ConnectionV2}, constants::*};
+use crate::{constants::*, state::ConnectionV2};
 
 use anchor_lang::prelude::*;
 
@@ -21,10 +21,12 @@ pub struct MakeConnection<'info> {
 pub fn make_connection(ctx: Context<MakeConnection>, to: Pubkey) -> Result<()> {
     let clock = Clock::get()?;
     let connection = &mut ctx.accounts.connection;
-    connection.from = ctx.accounts.from.key();
-    connection.to = to;
-    connection.connected_at = clock.unix_timestamp;
-    connection.disconnected_at = None;
+    connection.set_inner(ConnectionV2 {
+        from: ctx.accounts.from.key(),
+        to,
+        connected_at: clock.unix_timestamp,
+        disconnected_at: None,
+    });
     connection.log_make();
     Ok(())
 }
