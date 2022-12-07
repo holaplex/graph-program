@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use anchor_lang::prelude::*;
 
 declare_id!("grphAFGNvCjLKHeEmPNa91eGJChcUhrdaYYharcZCTQ");
@@ -12,21 +10,27 @@ pub mod graph_program {
         let storage = &mut ctx.accounts.storage;
         let storage_bump = ctx.bumps["storage"];
         storage.bump = storage_bump;
-        storage.connections = HashSet::new();
+        storage.connections = vec![];
         Ok(())
     }
 
     pub fn create_connection(ctx: Context<CreateConnection>, to: Pubkey) -> Result<()> {
         let storage = &mut ctx.accounts.storage;
-        let was_present = storage.connections.insert(to);
-        require!(!was_present, GraphError::ConnectionAlreadyExists);
+        // TODO: Use HashSet instead of Vec when it's properly supported by anchor.
+        // TODO: or use a different client without touching Anchor's IDL
+        let position = storage.connections.iter().position(|f| f == &to);
+        require!(position.is_none(), GraphError::ConnectionAlreadyExists);
+        storage.connections.push(to);
         Ok(())
     }
 
     pub fn remove_connection(ctx: Context<CreateConnection>, to: Pubkey) -> Result<()> {
         let storage = &mut ctx.accounts.storage;
-        let was_present = storage.connections.remove(&to);
-        require!(was_present, GraphError::ConnectionNotFound);
+        // TODO: Use HashSet instead of Vec when it's properly supported by anchor.
+        // TODO: or use a different client without touching Anchor's IDL
+        let position = storage.connections.iter().position(|f| f == &to);
+        require!(position.is_some(), GraphError::ConnectionNotFound);
+        storage.connections.remove(position.unwrap());
         Ok(())
     }
 
@@ -35,7 +39,7 @@ pub mod graph_program {
 
 #[account]
 pub struct ConnectionsStorage {
-    pub connections: HashSet<Pubkey>,
+    pub connections: Vec<Pubkey>,
     pub bump: u8,
 }
 
@@ -43,7 +47,7 @@ impl ConnectionsStorage {
     pub fn size(length: usize) -> usize {
         8 + // Discriminator
         1 + // Bump
-        4 + 32 * length // Connections HashSet
+        4 + 32 * length // Connections Vec/HashSet
     }
 }
 

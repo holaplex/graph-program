@@ -9,63 +9,57 @@ const expect = require("chai").expect;
 const sleep = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time));
 
-const getConnectionV2PDA = (
+const getConnectionsStoragePDA = (
   from: anchor.web3.PublicKey,
-  to: anchor.web3.PublicKey,
   program: anchor.Program<GraphProgram>
 ) =>
   anchor.web3.PublicKey.findProgramAddress(
-    [b`connectionv2`, from.toBytes(), to.toBytes()],
+    [b`connections`, from.toBytes()],
     program.programId
   );
 
 describe("graph-program", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const program = anchor.workspace.GraphProgram as Program<GraphProgram>;
-
   const fromWallet = anchor.Wallet.local();
   const signer = fromWallet.publicKey;
   const to = anchor.web3.Keypair.generate().publicKey;
-
-  it("makes_connections", async () => {
-    // No need to derive PDA here thanks to Seeds feature!
+  it("creates_connections_storage", async () => {
+    const [pda] = await getConnectionsStoragePDA(signer, program);
     const txId = await program.methods
-      .makeConnection(to)
-      .accounts({ from: signer })
-      .rpc();
-    expect(!!txId).to.be.true;
-    // Wait for finality so we avoid disconnecting on the same time slot.
-    await program.provider.connection.confirmTransaction(txId, 'finalized');
-    const [pda] = await getConnectionV2PDA(signer, to, program);
-    const connection = await program.account.connectionV2.fetch(pda);
-    expect(connection.disconnectedAt).to.be.null;
-  });
-
-  it("revokes_connections", async () => {
-    const [pda, bump] = await getConnectionV2PDA(signer, to, program);
-    const txId = await program.methods
-      .revokeConnection(bump, to)
-      .accounts({ from: signer })
-      .rpc();
-    expect(!!txId).to.be.true;
-    const connection = await program.account.connectionV2.fetch(pda);
-    expect(!!connection.disconnectedAt).to.be.true;
-  });
-
-  it("closes_connections", async () => {
-    const [pda, bump] = await getConnectionV2PDA(signer, to, program);
-    const wallet = new anchor.Wallet(anchor.web3.Keypair.generate());
-    const txId = await program.methods
-      .closeConnection(bump, to)
-      .accounts({
-        connection: pda,
-        from: signer,
-        signer: wallet.publicKey, // Different signer
+      .createConnectionsStorage()
+      .accountsStrict({
+        signer,
+        storage: pda,
+        systemProgram: anchor.web3.SystemProgram.programId,
       })
-      .signers([wallet.payer])
       .rpc();
     expect(!!txId).to.be.true;
-    const connection = await program.account.connectionV2.fetchNullable(pda);
-    expect(connection).to.be.null;
+    const storage = await program.account.connectionsStorage.fetch(pda);
+    expect(storage.connections.length).to.be.equal(0);
+  });
+  it("creates_connections", async () => {
+    const [pda] = await getConnectionsStoragePDA(signer, program);
+    const txId = await program.methods
+      .createConnection(to)
+      .accountsStrict({
+        signer,
+        storage: pda,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
+    expect(!!txId).to.be.true;
+  });
+  it("removes_connections", async () => {
+    const [pda] = await getConnectionsStoragePDA(signer, program);
+    const txId = await program.methods
+      .removeConnection(to)
+      .accountsStrict({
+        signer,
+        storage: pda,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
+    expect(!!txId).to.be.true;
   });
 });
